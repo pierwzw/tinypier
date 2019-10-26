@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pier.dao.BookDao">
+	<!-- 默认为PerpetualCache-->
+	<!--<cache type="com.pier.cache.MyCache"></cache>-->
+	<!-- 自定义返回结果集 -->
+	<resultMap id="bookMap" type="com.pier.bean.Book">
+		<id property="id" column="id" javaType="java.lang.Integer"/>
+		<result property="title" column="title" javaType="java.lang.String"/>
+		<result property="price" column="price" javaType="java.math.BigDecimal"/>
+		<result property="passwd" column="passwd" javaType="java.lang.String"/>
+		<result property="category" column="category" javaType="java.lang.String"/>
+		<result property="createTime" column="createtime" javaType="java.util.Date"/>
+		<result property="updateTime" column="updatetime" javaType="java.util.Date"/>
+	</resultMap>
+
+	<select id="getBook" parameterType="java.lang.Integer" resultMap="bookMap">
+		select * from books where id=#{id}
+	</select>
+
+	<select id="findBooks" parameterType="java.lang.String" resultMap="bookMap">
+		select * from books where title=#{title}
+	</select>
+
+	<select id="listBooks" resultMap="bookMap">
+		select * from books
+	</select>
+
+	<select id="findBooksByCategory" parameterType="java.lang.String" resultMap="bookMap">
+		select * from books where category=#{category}
+	</select>
+
+	<insert id="insertBook" parameterType="com.pier.bean.Book" useGeneratedKeys="true" keyProperty="id">
+		insert into books values (null,#{book.title},#{book.price},#{book.passwd},#{book.category}, now(), now())
+	</insert>
+    
+    <delete id="deleteBook" parameterType="java.lang.Integer">
+        delete from books where id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pier.dao.OrderDao">
+	<!-- 默认为PerpetualCache-->
+	<!--<cache type="com.pier.cache.MyCache"></cache>-->
+	<!-- 自定义返回结果集 -->
+	<resultMap id="orderMap" type="com.pier.bean.Order">
+		<id property="id" column="id" javaType="java.lang.Integer"/>
+		<result property="orderId" column="orderid" javaType="java.lang.String"/>
+		<result property="bookId" column="bookid" javaType="java.lang.Integer"/>
+		<result property="price" column="price" javaType="java.math.BigDecimal"/>
+		<result property="status" column="status" javaType="java.lang.Integer"/>
+		<result property="createTime" column="createtime" javaType="java.util.Date"/>
+		<result property="updateTime" column="updatetime" javaType="java.util.Date"/>
+	</resultMap>
+
+	<select id="getOrderByOrderId" parameterType="java.lang.String" resultMap="orderMap">
+		select * from `order` where orderid=#{orderId}
+	</select>
+
+	<insert id="create" parameterType="com.pier.bean.Order" useGeneratedKeys="true" keyProperty="id">
+		insert into `order` values (null,#{order.orderId},#{order.bookId},#{order.price}, 0, now(), now())
+	</insert>
+    
+    <delete id="deleteOrder" parameterType="java.lang.Integer">
+        delete from `order` where orderid=#{orderId}
+    </delete>
+
+	<update id="updateOrder" parameterType="com.pier.bean.Order">
+		update
+		`order`
+		<set>
+			<if test="BookId != null">bookid = #{bookId,jdbcType=INTEGER},</if>
+			<if test="price != null">price = #{price,jdbcType=DECIMAL},</if>
+			<if test="status != null">status = #{status,jdbcType=INTEGER},</if>
+			<if test="updateTime != null">updatetime = #{updateTime,jdbcType=DATETIME},</if>
+		</set>
+		where orderid = #{orderId,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateStatus">
+		update `order` set status=#{status} where orderid=#{orderId}
+	</update>
+</mapper>
