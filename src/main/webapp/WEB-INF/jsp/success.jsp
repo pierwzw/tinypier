@@ -19,6 +19,6 @@
 </head>
 
 <body>
-success
+success:${msg}
 </body>
 </html>

@@ -1,6 +1,11 @@
 package com.pier.Controller;
 
+import com.pier.bean.Book;
+import com.pier.utils.ZipUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.core.ApplicationPart;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,16 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author zhongweiwu
  * @date 2019/9/23 10:36
  */
+@Slf4j
 @Controller
 @RequestMapping("/file")
 public class FileController {
@@ -27,6 +30,10 @@ public class FileController {
     // 此处之前就已经报错
     //@Value("${spring.servlet.multipart.location}")
     private static final String filepath = "D:/tmp/image";
+
+    static String path1 = "C:\\Users\\pier\\Desktop\\direcory.txt";
+    static String path2 = "C:\\Users\\pier\\Desktop\\books.txt";
+    static String path3 = "C:\\Users\\pier\\Desktop\\out.txt";
 
     /**
      * 打开文件上传请求页面
@@ -135,5 +142,86 @@ public class FileController {
         result.put("success", success);
         result.put("msg", msg);
         return result;
+    }
+
+    public static void diff() {
+        InputStreamReader reader1 = null;
+        InputStreamReader reader2 = null;
+        BufferedReader br1 = null;//还可以使用scanner来读取不过要慢十倍：
+        BufferedReader br2 = null;
+        //Scanner sc = new Scanner(new File(""));
+//读入数字只能用scanner,BufferedWriter没有读入数字的方法
+        File fo = new File(path3);
+        OutputStreamWriter writer = null;
+        BufferedWriter bw = null;
+        try {
+            InputStream is1 = new FileInputStream(path1);
+            InputStream is2 = new FileInputStream(path2);
+            reader1 = new InputStreamReader(is1, "utf-8");
+            reader2 = new InputStreamReader(is2, "utf-8");
+            br1 = new BufferedReader(reader1);
+            br2 = new BufferedReader(reader2);
+
+            OutputStream os = new FileOutputStream(fo, false);
+            writer = new OutputStreamWriter(os, "utf-8");
+            bw = new BufferedWriter(writer);
+
+            String line1 = null;
+            String line2 = null;
+            ArrayList<String> list1 = new ArrayList<>();
+            ArrayList<String> list2 = new ArrayList<>();
+
+            while((line1 = br1.readLine()) != null){
+                list1.add(line1);
+            }
+            while((line2 = br2.readLine()) != null){
+                list2.add(line2);
+            }
+            list1.removeAll(list2);
+            for(String str:list1){
+                bw.write(str+"\n");
+                bw.flush();//非常重要,close的时候会强制flush
+            }
+
+            bw.write("\n");//可以使用bw.newLine();代替
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bw.close();
+                br1.close();
+                br2.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    static int n=0;
+
+    /**
+     * 复制文件到另一个文件夹
+     * @param file
+     * @param out
+     * @throws IOException
+     */
+    public static void copyAll(File file, String out) throws IOException {
+        for (File toList:file.listFiles()){
+            if (toList.isDirectory()){
+                copyAll(toList, out);
+            }else if(toList.getName().endsWith(".pdf")){
+                System.out.println(++n + ". " + toList.getName());
+                FileUtils.copyFile(toList, new File(out + "\\" + toList.getName()));
+            }
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        /*String in = "E:\\PDF";
+        String out = "E:\\all";
+        copyAll(new File(in), out);*/
+        diff();
     }
 }
