@@ -21,8 +21,8 @@
 	</tbody>
 </table>
 <p><span></span></p>
-<script src="/static/js/jquery.min.js"></script>
-<script src="/static/js/plugin/layer/layer.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/plugin/layer/layer.js"></script>
 <script>
 	function GetListItems() {
 		$.ajax({
@@ -31,6 +31,7 @@
 			contentType: "application/json; charset=utf-8",
 			data: "{}",
 			dataType: "json",
+			crossDomain: true,
 			success: function (result) {
 				display(result);
 			},

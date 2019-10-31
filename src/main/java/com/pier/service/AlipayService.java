@@ -2,8 +2,10 @@ package com.pier.service;
 import com.alipay.api.domain.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayOpenPublicTemplateMessageIndustryModifyRequest;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
@@ -56,7 +58,7 @@ public class AlipayService {
     public AlipayTradePrecreateResponse precreateOrder(Order order, String title){
         try{
             AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
-            // request.setNotifyUrl(NOTIFY_URL);
+            request.setNotifyUrl(NOTIFY_URL);
             AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
             model.setOutTradeNo(order.getOrderId());
             model.setTotalAmount(order.getPrice().toString());
@@ -141,6 +143,26 @@ public class AlipayService {
             }
         }catch (Exception e){
 
+        }
+    }
+
+    /**
+     * 异步通知验签
+     */
+    public boolean verifySign(Map<String, String> paramsMap){
+        try{
+            //调用SDK验证签名
+            boolean signVerified = AlipaySignature.rsaCheckV1(paramsMap, ALIPAY_PUBLIC_KEY, CHARSET, "RSA2");
+            if(signVerified){
+                // TODO 验签成功后
+                // 需要做以下的检验：1. out_trade_no 2. total_amount 3. seller_id 4. app_id 5. 订单状态
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception e){
+            log.error("verify sign error");
+            return false;
         }
     }
 }

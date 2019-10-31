@@ -1,18 +1,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-	<base href="<%=basePath%>">
-
 	<title>扫一扫二维码</title>
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">
@@ -31,11 +23,11 @@
 	</h1>
 	<h2>支付后获取学习资料密码，有问题请联系QQ:501311328</h2>
 	<div>
-		<img alt="" <%--height="100"--%> src="qrcode/${orderId}">
+		<img src="/qrcode/${orderId}" alt="">
 	</div>
     <p>支付成功后，请勿刷新，等待几秒钟，然后 →<button id="checkAndGet">点击这里</button></p>
 </body>
-<script src="/static/js/jquery.min.js"></script>
+<script src="/js/jquery.min.js"></script>
 <script type="text/javascript">
 	$("#checkAndGet").click(function () {
 		$.ajax({
@@ -44,6 +36,7 @@
 			url: '/order/check/${orderId}',
 			contentType: "application/x-www-form-urlencoded; charset=utf-8",
 			dataType: "json",
+			crossDomain: true,
 			success: function (data) {
 				if(data.code==='0') {
 					var passwd = data.passwd;

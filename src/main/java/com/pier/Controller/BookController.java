@@ -239,4 +239,24 @@ public class BookController {
        return "success";
     }
 
+    /**
+     * 创建小次方密码链接说明
+     * @return
+     */
+    @GetMapping("/txt")
+    @ResponseBody
+    public String makeXCFTxt() throws IOException {
+        String path = "";
+        //File file = new File();
+        List<Book> books = bookService.listBooks();
+        int n=0;
+        for (Book book:books){
+            String content = "收集整理资料不易，请复制以下链接，在浏览器打开获取解压密码\n" +
+                    "https://share.pierwzw.top/fetch/" + book.getId() + "\n\n";
+            FileUtils.write(new File(txtFile+"-"+book.getId() + ".txt"), content, "utf-8");
+            log.info(++n + ". " + txtFile+"-"+book.getId() + ".txt");
+        }
+        return "success";
+    }
+
 }

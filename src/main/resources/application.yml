@@ -9,11 +9,16 @@ spring:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
+    # 静态资源url
+#    static-path-pattern: /static/**
   # 热部署生效
   devtools:
     restart:
       enabled: true
       exclude: WEB-INF/**
+  # 静态资源
+#  resources:
+#    static-locations: file:/root/webapps/assets
   # 数据源
   datasource:
     name: mysql_test
@@ -70,7 +75,8 @@ mybatis:
 #  config: classpath:logback.xml
 ##  level: error
 
-app:
-  java:
-    # 读取maven的配置
-    version: @java.version@
+#1.4.2中不能打包，要注掉
+#app:
+#  java:
+#    # 读取maven的配置
+#    version: @java.version@

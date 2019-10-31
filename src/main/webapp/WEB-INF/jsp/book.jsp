@@ -23,7 +23,7 @@
 			<input  type="submit"  value=" 提交 " id="submit"/>
 		</form>
 	</div>
-	<script src="/static/js/jquery.min.js"></script>
+	<script src="/js/jquery.min.js"></script>
 <script type="text/javascript">
 	$("#submit").click(function () {
 		if ($("#title").val() === ''){

@@ -6,8 +6,8 @@
 </head>
 <body>
 <button style="text-align: center" onclick="deleteBook()">刷新</button>
-<script src="/static/js/jquery.min.js"></script>
-<script src="/static/js/plugin/layer/layer.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/plugin/layer/layer.js"></script>
 <script>
 
 	function deleteBook() {
