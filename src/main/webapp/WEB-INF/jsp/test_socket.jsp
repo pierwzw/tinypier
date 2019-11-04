@@ -19,46 +19,17 @@
 
 <body>
 	<h1>
-		扫描二维码支付
+		test socket
 	</h1>
-	<h2>支付后获取《指导说明书密码》，请不要刷新本页面</h2><br>
-	<h2>请充分考虑后自愿购买，</h2><br>
-	<h2>内容不适合不劳而获者！</h2>
-	<div>
-		<img src="/qrcode/${orderId}" alt="">
-	</div>
-    <%--<p>支付成功后，请勿刷新，等待几秒钟，然后 →<button id="checkAndGet">点击这里</button></p>--%>
+	<h2>支付后获取学习资料密码，有问题请联系QQ:501311328</h2>
 </body>
-<script src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/stomp.min.js"></script>
 <script type="text/javascript">
-	$("#checkAndGet").click(function () {
-		$.ajax({
-			async: false,//同步，待请求完毕后再执行后面的代码
-			type: "POST",
-			url: '/order/check/${orderId}',
-			contentType: "application/x-www-form-urlencoded; charset=utf-8",
-			dataType: "json",
-			crossDomain: true,
-			success: function (data) {
-				if(data.code==='0') {
-					var passwd = data.passwd;
-					window.location.href="/passwd/" + passwd;
-				} else {
-					alert("支付失败，请重试");
-				}
-			},
-			error: function () {
-				alert("系统异常")
-			}
-		})
-	})
-	/*websocket*/
+
 	var websocket = null;
 	// 判断当前浏览器是否支持WebSocket
 	if ('WebSocket' in window) {
 		// 创建WebSocket对象,连接服务器端点
-		websocket = new WebSocket("wss://www.pierwzw.top/ws");
+		websocket = new WebSocket("ws://localhost:8089/ws");
 	} else {
 		alert('Not support websocket')
 	}
@@ -75,15 +46,8 @@
 
 	// 接收到消息的回调方法
 	websocket.onmessage = function(event) {
-		var passwd
-		var message = event.data.split(",")
-		var code =  message[0]
-		if (code === "0") {
-			passwd = message[1]
-			window.location.href = "/passwd/" + passwd;
-		} else {
-			alert("支付失败, code:" + message[1])
-		}
+		alert(event.data)
+		console.info(event.data)
 	}
 
 	// 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，

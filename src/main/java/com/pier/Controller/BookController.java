@@ -7,6 +7,7 @@ import com.pier.result.Result;
 import com.pier.result.ResultUtil;
 import com.pier.service.BookService;
 import com.pier.service.OrderService;
+import com.pier.service.impl.WebSocketServiceImpl;
 import com.pier.utils.OrderUtil;
 import com.pier.utils.ZipUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,8 @@ public class BookController {
     private BookService bookService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private WebSocketServiceImpl webSocketService;
 
 
     @GetMapping("/add")
@@ -132,6 +135,8 @@ public class BookController {
         order.setBookId(book.getId());
         order.setPrice(book.getPrice());
         orderService.create(order);
+        // 设置websocket的id,不能在这set,因为与回调的时候的不是同一个订单
+        //webSocketService.setId(orderId);
         return new ModelAndView("index", "orderId", orderId);
     }
 
@@ -166,6 +171,8 @@ public class BookController {
         order.setBookId(book.getId());
         order.setPrice(book.getPrice());
         orderService.create(order);
+        // 设置websocket的id, 不能在这set，因为与回调的时候的不是同一个订单
+        //webSocketService.setId(orderId);
         return new ModelAndView("guide", "orderId", orderId);
     }
 
@@ -243,7 +250,7 @@ public class BookController {
      * 创建小次方密码链接说明
      * @return
      */
-    @GetMapping("/txt")
+    @GetMapping("/xcf/txt")
     @ResponseBody
     public String makeXCFTxt() throws IOException {
         String path = "";
