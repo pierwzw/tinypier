@@ -8,6 +8,7 @@ import com.pier.result.ResultUtil;
 import com.pier.service.BookService;
 import com.pier.service.OrderService;
 import com.pier.service.impl.WebSocketServiceImpl;
+import com.pier.utils.HttpUtil;
 import com.pier.utils.OrderUtil;
 import com.pier.utils.ZipUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -126,7 +127,7 @@ public class BookController {
      * @return
      */
     @GetMapping("/fetch/{id}")
-    public ModelAndView fetchBook(@PathVariable int id){
+    public ModelAndView fetchBook(HttpServletRequest request, @PathVariable int id){
         Book book = bookService.getBook(id);
         // 创建订单
         Order order = new Order();
@@ -134,6 +135,8 @@ public class BookController {
         order.setOrderId(orderId);
         order.setBookId(book.getId());
         order.setPrice(book.getPrice());
+        String ip = HttpUtil.getIpAddr(request);
+        order.setIp(ip);
         orderService.create(order);
         // 设置websocket的id,不能在这set,因为与回调的时候的不是同一个订单
         //webSocketService.setId(orderId);
@@ -162,7 +165,7 @@ public class BookController {
      * @return
      */
     @GetMapping("/guide")
-    public ModelAndView guide(){
+    public ModelAndView guide(HttpServletRequest request){
         Book book = bookService.getBook(10);
         // 创建订单
         Order order = new Order();
@@ -170,6 +173,8 @@ public class BookController {
         order.setOrderId(orderId);
         order.setBookId(book.getId());
         order.setPrice(book.getPrice());
+        String ip = HttpUtil.getIpAddr(request);
+        order.setIp(ip);
         orderService.create(order);
         // 设置websocket的id, 不能在这set，因为与回调的时候的不是同一个订单
         //webSocketService.setId(orderId);

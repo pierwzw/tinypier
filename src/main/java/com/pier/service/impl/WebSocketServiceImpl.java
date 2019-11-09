@@ -4,13 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-@ServerEndpoint("/ws")
+@ServerEndpoint("/ws")//可以指定用户名来向指定的用户发送信息
 @Service
 @Slf4j
 public class WebSocketServiceImpl {

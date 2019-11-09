@@ -10,6 +10,7 @@
 		<result property="bookId" column="bookid" javaType="java.lang.Integer"/>
 		<result property="price" column="price" javaType="java.math.BigDecimal"/>
 		<result property="status" column="status" javaType="java.lang.Integer"/>
+		<result property="ip" column="ip" javaType="java.lang.String"/>
 		<result property="createTime" column="createtime" javaType="java.util.Date"/>
 		<result property="updateTime" column="updatetime" javaType="java.util.Date"/>
 	</resultMap>
@@ -19,7 +20,7 @@
 	</select>
 
 	<insert id="create" parameterType="com.pier.bean.Order" useGeneratedKeys="true" keyProperty="id">
-		insert into `order` values (null,#{order.orderId},#{order.bookId},#{order.price}, 0, now(), now())
+		insert into `order` values (null,#{order.orderId},#{order.bookId},#{order.price}, 0, #{order.ip}, now(), now())
 	</insert>
     
     <delete id="deleteOrder" parameterType="java.lang.Integer">
@@ -33,6 +34,7 @@
 			<if test="BookId != null">bookid = #{bookId,jdbcType=INTEGER},</if>
 			<if test="price != null">price = #{price,jdbcType=DECIMAL},</if>
 			<if test="status != null">status = #{status,jdbcType=INTEGER},</if>
+			<if test="ip != null">ip = #{ip,jdbcType=VARCHAR},</if>
 			<if test="updateTime != null">updatetime = #{updateTime,jdbcType=DATETIME},</if>
 		</set>
 		where orderid = #{orderId,jdbcType=INTEGER}

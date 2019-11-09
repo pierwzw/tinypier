@@ -20,6 +20,7 @@ public class Order implements Serializable {
     private int bookId;
     private BigDecimal price;
     private int status;
+    private String ip;
     private Date createTime;
     private Date updateTime;
 }
